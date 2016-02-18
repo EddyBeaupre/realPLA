@@ -1,0 +1,14 @@
+
+(C) 2012 Thomas 'skoe' Giesel
+
+This hardware design is licensed under
+Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
+
+http://creativecommons.org/licenses/by-sa/3.0/
+
+If you use this design, please add the text 
+        "skoe" 
+or one of
+        "based on work by skoe"
+        "developed by skoe"
+to your PCB in a font not smaller than what is used in the original design.

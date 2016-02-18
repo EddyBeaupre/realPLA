@@ -1,0 +1,6 @@
+
+
+MODULE c64pla
+
+	SUBMODULE c64pla_core
+		INSTANCE u0

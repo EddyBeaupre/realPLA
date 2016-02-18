@@ -1,0 +1,115 @@
+Cmp-Mod V01 Created by CvPcb (2012-apr-16-27)-stable date = So 08 Sep 2013 13:11:52 CEST
+
+BeginCmp
+TimeStamp = /4F3BBFA7;
+Reference = C1;
+ValeurCmp = 1u;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F5924B4;
+Reference = C2;
+ValeurCmp = 100n;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F5924C8;
+Reference = C3;
+ValeurCmp = 100n;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F5924CC;
+Reference = C4;
+ValeurCmp = 100n;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F592F44;
+Reference = C5;
+ValeurCmp = 100n;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F568602;
+Reference = CN1;
+ValeurCmp = 4_x_100p;
+IdModule  = RARRAY;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F568609;
+Reference = CN2;
+ValeurCmp = 4_x_100p;
+IdModule  = RARRAY;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F3BB882;
+Reference = J1;
+ValeurCmp = PLA;
+IdModule  = DIP-28__600;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F569281;
+Reference = P1;
+ValeurCmp = JTAG;
+IdModule  = 6X1_50MIL;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F3E413F;
+Reference = RN1;
+ValeurCmp = 4_x_180;
+IdModule  = RARRAY;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F3E414A;
+Reference = RN2;
+ValeurCmp = 4_x_180;
+IdModule  = RARRAY;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F3E414E;
+Reference = RN3;
+ValeurCmp = 4_x_100;
+IdModule  = RARRAY;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F3E414F;
+Reference = RN4;
+ValeurCmp = 4_x_100;
+IdModule  = RARRAY;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F3E3069;
+Reference = U1;
+ValeurCmp = LC4032V-T48;
+IdModule  = VQFP48_05;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F3E3030;
+Reference = U2;
+ValeurCmp = 74AHCT373;
+IdModule  = TSSOP20;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F3BADF8;
+Reference = U3;
+ValeurCmp = SPX5205M5-L-3-3/TR;
+IdModule  = SOT23-5;
+EndCmp
+
+EndListe

@@ -1,0 +1,80 @@
+
+%
+% texlive, texlive-science
+%
+
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+\usepackage[utf8]{inputenx}
+%\usepackage{microtype}
+\usepackage{afterpage}
+\usepackage{fancybox}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+\usepackage[svgnames]{xcolor}
+\usepackage{listings}
+\usepackage{siunitx}
+\usepackage{calc}
+\usepackage{float}
+\usepackage{rotating}
+
+\usepackage{hyperref} % muss letztes package sein
+
+\graphicspath{{obj/images/}{src/images/}}
+\newsubfloat{figure}
+
+\definecolor{mytextframecolor}{rgb}{0.9,0.9,1.0}
+
+\newenvironment{mytextframe}%
+{%
+    \begin{Sbox}\begin{minipage}%
+}%
+{
+    \end{minipage}\end{Sbox}%
+    \begin{center}%
+        \fcolorbox{black}{mytextframecolor}{\TheSbox}%
+    \end{center}%
+}
+
+
+\lstset{
+    basicstyle=\listingtextsize\ttfamily,
+    commentstyle=\color{DimGray},
+    xleftmargin=\parindent,
+    %frame=shadowbox,
+    %rulesepcolor=\color{Gray},
+    language=VHDL
+}
+
+\hypersetup{
+    colorlinks = {true},
+    linkcolor = {blue},
+    linkcolor = {blue},
+    filecolor = {blue},
+    urlcolor = {blue},
+    citecolor = {blue},
+    pdfborder = 0 0 0
+}
+
+\parindent 0pt
+\parskip 6pt
+
+\captiontitlefont{\tabletextsize}
+\captionnamefont{\tabletextsize}
+
+\newcommand{\myupto}[1]{\minof{\textwidth}{#1}}
+
+\newcommand{\myVOH}{V_\mathrm{OH}}
+\newcommand{\myVth}{V_\mathrm{th}}
+\newcommand{\myVCC}{V_\mathrm{CC}}
+\newcommand{\myVSS}{V_\mathrm{SS}}
+\newcommand{\myVinv}{V_\mathrm{inv}}
+\newcommand{\myVGS}{V_\mathrm{GS}}
+\newcommand{\myVGSd}{V_\mathrm{GSd}}
+\newcommand{\myVGSu}{V_\mathrm{GSu}}
+\newcommand{\myVDSu}{V_\mathrm{DSu}}
+\newcommand{\myVDSd}{V_\mathrm{DSd}}
+\newcommand{\myVO}{V_\mathrm{O}}

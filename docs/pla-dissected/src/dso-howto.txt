@@ -1,0 +1,4 @@
+Gimp:
+Image => Canvas size... => 394 x 350 @ -10, -74 (all layers)
+Colors => Treshold => 75
+Colors => Invert

@@ -1,0 +1,464 @@
+\documentclass[a4paper,oneside]{memoir}
+%\documentclass[ebook]{memoir}
+
+\setlength{\trimtop}{0pt}
+\setlength{\trimedge}{\stockwidth}
+\addtolength{\trimedge}{-\paperwidth}
+\settypeblocksize{24cm}{14cm}{*}
+\setulmargins{3cm}{*}{*}
+\setlrmargins{4cm}{*}{*}
+\setmarginnotes{17pt}{51pt}{\onelineskip}
+\setheadfoot{\onelineskip}{2\onelineskip}
+\setheaderspaces{*}{2\onelineskip}{*}
+\checkandfixthelayout
+
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+\usepackage[utf8x]{inputenx}
+%\usepackage{selinput}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{hyperref} % muss letztes package sein
+
+\hypersetup{pdfborder=0 0 0}
+
+
+\title{The C64 PLA}
+\author{
+Thomas 'skoe' Giesel
+(skoe@directbox.com)
+}
+
+\begin{document}
+\emergencystretch=0.15\hsize
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{empty}
+\begin{center}
+
+\vspace*{5cm}
+\textsc{\huge Designing a Real KERNAL Cartridge}\\[2cm]
+{\large Thomas 'skoe' Giesel}
+
+\vfill
+
+% Bottom of the page
+{\large First Edition \\[0.5cm] \today}
+
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\tableofcontents
+
+\chapter{Introduction}
+
+\section{About this Document}
+
+The PLA (programmable logic array) in the Commodore 64 is used to create
+chip select signals from various other signals, e.g. from the current
+address. These signals control which chip is to be connected to the data
+bus. Therefore the PLA is responsible to define the memory map of the C64.
+
+Understanding the logical function of the PLA is important for programmers,
+for hardware and emulator developers. To implement a drop-in replacement for
+original PLA chips it is also important to have a close look at the
+electrical properties of the original PLAs. This document addresses both
+topics.
+
+In the last chapter an implementation of the PLA in hardware is introduced
+which can be built with parts being in production at the time of
+writing. This implementation aims at highest compatibility possible while
+still using low-cost parts only.
+
+Why is it neccesary to write a document about the PLA in 2012? Things
+already documented are spread over many articles, buried in various forums
+and mailing lists and printed in old dusty books. This document aims to
+collect existing knowledge and to add new measurement and research results.
+Please look out for new revisions of this document. If you have new or
+additional information relevant for this document, please contact me.
+
+\section{Acknowledgements}
+
+I wish to thank the engineers of Commodore for the interesting memory maps
+achieved by using the PLA. Sadly, you forgot an external KERNAL ;)
+
+Furthermore I'dl like to express respect to all guys who examined the PLA
+before and published their results, namely William Levak, Jens Schönfeld,
+Marko Mäkelä, Andreas Boose and Mark Smith.
+
+All PLA logic contained in this document and used for the implementation is
+based on the JEDEC file by Raymond Jett of arcadecomponents.com. It was
+created by reading a C64 PLA with a TopMAX programmer and Max Loader
+software. The file is available at \cite{AC12} and in the source code
+repository of the realPLA implementation (link: todo).
+
+Segher Boessenkool described in a mail to the cbm-hackers mailing list how
+the JEDEC file can be read directly. Thanks to him I was able to implemented
+a small tool which converted the JEDEC file to VHDL equations directly.
+
+\chapter{The Logic in the PLA}
+
+\section{History}
+
+The memory maps in \cite {PRG83} show all possible combinations as they are
+seen by the CPU, including Ultimax mode. However, some details cannot be
+taken from \cite{PRG83}, especially memory configurations for VIC-II
+accesses, identified by the signals AEC and BA. Furthermore, some information
+shown there is just plain wrong, which is the case for the column
+labeled XXXX.
+
+Probably the earliest full reverse engineering of the logic programmed to
+the PLA was written by William Levak in 1986. It was published in \cite
+{Lev86}. Unfortunately it has a mistake in the memory maps, although the
+logic table is correct: The memory holes in Ultimax mode (\#GAME = 0, \#EXROM
+= 1) are incorrectly labeled with "RAM".
+
+Some years later, in 1994, Jens Schönfeld captured a full truth
+table from a PLA. He, Marko Mäkelä, Andreas Boose and others \cite
+{PLA95} investigated that truth table and derived equations from it.
+This was the first time (to the knowledge of the author) the logic
+from the PLA was documented openly without errors.
+
+Mark Smith took a programmer and read out an 82S100 in 1995. The
+results confirmed the work from one year ago. Later different PLAs
+with different part numbers by different manufacturers found in C64s
+have been read out. No differences have been found.
+
+\chapter{Hardware}
+\section{Types of PLAs found in C64s}
+
+The well known PLA type 82S100 by Signetics/Phillips can be found in
+many early C64s. There are also similar devices with different names
+made by other manufacturers. They can be recognized by their high
+idle current, they draw about 100 mA when all inputs are high, and
+the outputs are without load.
+
+Later chips labelled with MOS 906114-01 were used, which was a mask
+programmable NMOS version directly derived from the 82S100
+structure. After some manufacturing problems at the beginning
+(1983/1984?) they were used until the PLA in the C64 was replaced by
+a higher integrated IC.
+
+\section{Electrical Properties}
+
+In this section the results of measurements of some electrical properties of
+original PLAs and different PLA replacements are shown. Their meaning for
+the inner workings of the C64 is discussed.
+
+\subsection{Devices under Test}
+
+\subsection{Power Consumption}
+
+One of the most impressive properties of the PLA is: It gets quite hot for
+this little work it has to do. To get an impression about their static power
+dissipation, I mounted the devices on a breadboard. \#OE was grounded, so
+the outputs were enabled. All inputs were pulled high, the outputs didn't
+have a load. The current at VCC was measured with a multimeter. Additionally
+the temperature was measured with an infrared thermometer in the middle of
+the chip package's surface after a few minutes. Table XXX shows the results.
+
+
+\chapter{A PLA replacement: realPLA}
+
+
+\appendix
+\chapter{C64 Memory Configurations}
+
+The Commodore 64 memory configurations are contained in various books and
+other documents. Many of these tables are incomplete, some of them are
+flawed. Certainly there are also several complete and correct ones out there.
+I do not claim that there's anything new here.
+
+For the sake of completeness of an C64 PLA article they are listed here once
+more. The format of the tables is inspired by \cite{Lev86}, but they have
+been written in a slightly more compact way. I did my best to double und triple
+check them against the equations to make sure they are correct and complete.
+
+When the VIC-II pulls down BA to take over the bus e.g. for a so-called
+badline, there are three cycles left for the CPU. In these cycles up to
+three write accesses can take place, which is the maximum number of
+consecutive write accesses a 6510 does. If such a write access addresses the
+I/O area, the PLA selects the I/O chips. However, the CPU stops its work
+before the first read access is started during these three cycles. Therefore
+there are up to three dummy read accesses on the bus until the VIC-II takes
+over control. To make sure that these dummy reads will never accidentally
+acknowledge an interrupt, they are redirected to RAM by the PLA.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabularx}{0.9\textwidth}{>{\centering}X|c|c|c|c|c}
+        \toprule
+        \multicolumn{6}{c}{\#LORAM 1, \#HIRAM 1, \#GAME 1, \#EXROM 1} \\
+        \midrule
+            & \multicolumn{2}{c|}{\#CHAREN 1} & \multicolumn{2}{c|}{\#CHAREN 0} & \\
+        Address         & CPU R & CPU W & CPU R & CPU W & VIC R \\
+        \midrule
+        \texttt{\$F000 - \$FFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$E000 - \$EFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$D000 - \$DFFF} & I/O\footnotemark[1] & I/O & CHAR     & ram       & ram   \\
+        \texttt{\$C000 - \$CFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$B000 - \$BFFF} & BASIC    & ram   & BASIC    & ram       & ram   \\
+        \texttt{\$A000 - \$AFFF} & BASIC    & ram   & BASIC    & ram       & ram   \\
+        \texttt{\$9000 - \$9FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$8000 - \$8FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$7000 - \$7FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$6000 - \$6FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$5000 - \$5FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$4000 - \$4FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$3000 - \$3FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$2000 - \$2FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$1000 - \$1FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$0000 - \$0FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \bottomrule
+    \end{tabularx}
+    \caption{C64 memory configurations with LHGX = 1111}
+    \label{tab:mem1111}
+\end{table}
+
+\footnotetext[1]{RAM for CPU idle read when BA is low}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabularx}{0.9\textwidth}{>{\centering}X|c|c|c|c|c}
+        \toprule
+        \multicolumn{6}{c}{\#LORAM 0, \#HIRAM 1, \#GAME 1, \#EXROM x} \\
+        \midrule
+            & \multicolumn{2}{c|}{\#CHAREN 1} & \multicolumn{2}{c|}{\#CHAREN 0} & \\
+        Address         & CPU R & CPU W & CPU R & CPU W & VIC R \\
+        \midrule
+        \texttt{\$F000 - \$FFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$E000 - \$EFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$D000 - \$DFFF} & I/O\footnotemark[1] & I/O & CHAR     & ram       & ram   \\
+        \texttt{\$C000 - \$CFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$B000 - \$BFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$A000 - \$AFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$9000 - \$9FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$8000 - \$8FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$7000 - \$7FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$6000 - \$6FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$5000 - \$5FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$4000 - \$4FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$3000 - \$3FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$2000 - \$2FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$1000 - \$1FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$0000 - \$0FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \bottomrule
+    \end{tabularx}
+    \caption{C64 memory configurations with LHGX = 011x}
+    \label{tab:mem011x}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabularx}{0.9\textwidth}{>{\centering}X|c|c|c|c|c}
+        \toprule
+        \multicolumn{6}{c}{\#LORAM 1, \#HIRAM 0, \#GAME 1, \#EXROM x} \\
+        \multicolumn{6}{c}{\#LORAM 1, \#HIRAM 0, \#GAME 0, \#EXROM 0} \\
+        \midrule
+            & \multicolumn{2}{c|}{\#CHAREN 1} & \multicolumn{2}{c|}{\#CHAREN 0} & \\
+        Address         & CPU R & CPU W & CPU R & CPU W & VIC R \\
+        \midrule
+        \texttt{\$F000 - \$FFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$E000 - \$EFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$D000 - \$DFFF} & I/O\footnotemark[1] & I/O & CHAR     & ram       & ram   \\
+        \texttt{\$C000 - \$CFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$B000 - \$BFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$A000 - \$AFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$9000 - \$9FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$8000 - \$8FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$7000 - \$7FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$6000 - \$6FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$5000 - \$5FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$4000 - \$4FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$3000 - \$3FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$2000 - \$2FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$1000 - \$1FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$0000 - \$0FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \bottomrule
+    \end{tabularx}
+    \caption{C64 memory configurations with LHGX = 101x or 1000}
+    \label{tab:mem101x}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabularx}{0.65\textwidth}{>{\centering}X|c|c|c}
+        \toprule
+        \multicolumn{4}{c}{\#LORAM 0, \#HIRAM 0, \#GAME 1, \#EXROM x} \\
+        \multicolumn{4}{c}{\#LORAM 0, \#HIRAM 0, \#GAME 0, \#EXROM 0} \\
+        \midrule
+            & \multicolumn{2}{c|}{\#CHAREN x} & \\
+        Address         & CPU R & CPU W & VIC R \\
+        \midrule
+        \texttt{\$F000 - \$FFFF} & ram      & ram       & ram   \\
+        \texttt{\$E000 - \$EFFF} & ram      & ram       & ram   \\
+        \texttt{\$D000 - \$DFFF} & ram      & ram       & ram   \\
+        \texttt{\$C000 - \$CFFF} & ram      & ram       & ram   \\
+        \texttt{\$B000 - \$BFFF} & ram      & ram       & ram   \\
+        \texttt{\$A000 - \$AFFF} & ram      & ram       & ram   \\
+        \texttt{\$9000 - \$9FFF} & ram      & ram       & CHAR  \\
+        \texttt{\$8000 - \$8FFF} & ram      & ram       & ram   \\
+        \texttt{\$7000 - \$7FFF} & ram      & ram       & ram   \\
+        \texttt{\$6000 - \$6FFF} & ram      & ram       & ram   \\
+        \texttt{\$5000 - \$5FFF} & ram      & ram       & ram   \\
+        \texttt{\$4000 - \$4FFF} & ram      & ram       & ram   \\
+        \texttt{\$3000 - \$3FFF} & ram      & ram       & ram   \\
+        \texttt{\$2000 - \$2FFF} & ram      & ram       & ram   \\
+        \texttt{\$1000 - \$1FFF} & ram      & ram       & CHAR  \\
+        \texttt{\$0000 - \$0FFF} & ram      & ram       & ram   \\
+        \bottomrule
+    \end{tabularx}
+    \caption{C64 memory configurations with LHGX = 001x or 0000}
+    \label{tab:mem001x}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabularx}{0.9\textwidth}{>{\centering}X|c|c|c|c|c}
+        \toprule
+        \multicolumn{6}{c}{\#LORAM 1, \#HIRAM 1, \#GAME 0, \#EXROM 0} \\
+        \midrule
+            & \multicolumn{2}{c|}{\#CHAREN 1} & \multicolumn{2}{c|}{\#CHAREN 0} & \\
+        Address         & CPU R & CPU W & CPU R & CPU W & VIC R \\
+        \midrule
+        \texttt{\$F000 - \$FFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$E000 - \$EFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$D000 - \$DFFF} & I/O\footnotemark[1] & I/O & CHAR     & ram       & ram   \\
+        \texttt{\$C000 - \$CFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$B000 - \$BFFF} & ROMH     & ram   & ROMH     & ram       & ram   \\
+        \texttt{\$A000 - \$AFFF} & ROMH     & ram   & ROMH     & ram       & ram   \\
+        \texttt{\$9000 - \$9FFF} & ROML     & ram   & ROML     & ram       & CHAR  \\
+        \texttt{\$8000 - \$8FFF} & ROML     & ram   & ROML     & ram       & ram   \\
+        \texttt{\$7000 - \$7FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$6000 - \$6FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$5000 - \$5FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$4000 - \$4FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$3000 - \$3FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$2000 - \$2FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$1000 - \$1FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$0000 - \$0FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \bottomrule
+    \end{tabularx}
+    \caption{C64 memory configurations with LHGX = 1100}
+    \label{tab:mem1100}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabularx}{0.9\textwidth}{>{\centering}X|c|c|c|c|c}
+        \toprule
+        \multicolumn{6}{c}{\#LORAM 0, \#HIRAM 1, \#GAME 0, \#EXROM 0} \\
+        \midrule
+            & \multicolumn{2}{c|}{\#CHAREN 1} & \multicolumn{2}{c|}{\#CHAREN 0} & \\
+        Address         & CPU R & CPU W & CPU R & CPU W & VIC R \\
+        \midrule
+        \texttt{\$F000 - \$FFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$E000 - \$EFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$D000 - \$DFFF} & I/O\footnotemark[1] & I/O & CHAR     & ram       & ram   \\
+        \texttt{\$C000 - \$CFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$B000 - \$BFFF} & ROMH     & ram   & ROMH     & ram       & ram   \\
+        \texttt{\$A000 - \$AFFF} & ROMH     & ram   & ROMH     & ram       & ram   \\
+        \texttt{\$9000 - \$9FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$8000 - \$8FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$7000 - \$7FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$6000 - \$6FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$5000 - \$5FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$4000 - \$4FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$3000 - \$3FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$2000 - \$2FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$1000 - \$1FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$0000 - \$0FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \bottomrule
+    \end{tabularx}
+    \caption{C64 memory configurations with LHGX = 0100}
+    \label{tab:mem0100}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabularx}{0.9\textwidth}{>{\centering}X|c|c|c|c|c}
+        \toprule
+        \multicolumn{6}{c}{\#LORAM 1, \#HIRAM 1, \#GAME 1, \#EXROM 0} \\
+        \midrule
+            & \multicolumn{2}{c|}{\#CHAREN 1} & \multicolumn{2}{c|}{\#CHAREN 0} & \\
+        Address         & CPU R & CPU W & CPU R & CPU W & VIC R \\
+        \midrule
+        \texttt{\$F000 - \$FFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$E000 - \$EFFF} & KERNAL   & ram   & KERNAL   & ram       & ram   \\
+        \texttt{\$D000 - \$DFFF} & I/O\footnotemark[1] & I/O & CHAR     & ram       & ram   \\
+        \texttt{\$C000 - \$CFFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$B000 - \$BFFF} & BASIC    & ram   & BASIC    & ram       & ram   \\
+        \texttt{\$A000 - \$AFFF} & BASIC    & ram   & BASIC    & ram       & ram   \\
+        \texttt{\$9000 - \$9FFF} & ROML     & ram   & ROML     & ram       & CHAR  \\
+        \texttt{\$8000 - \$8FFF} & ROML     & ram   & ROML     & ram       & ram   \\
+        \texttt{\$7000 - \$7FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$6000 - \$6FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$5000 - \$5FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$4000 - \$4FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$3000 - \$3FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$2000 - \$2FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \texttt{\$1000 - \$1FFF} & ram      & ram   & ram      & ram       & CHAR  \\
+        \texttt{\$0000 - \$0FFF} & ram      & ram   & ram      & ram       & ram   \\
+        \bottomrule
+    \end{tabularx}
+    \caption{C64 memory configurations with LHGX = 1110}
+    \label{tab:mem1110}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabularx}{0.65\textwidth}{>{\centering}X|c|c|c}
+        \toprule
+        \multicolumn{4}{c}{\#LORAM x, \#HIRAM x, \#GAME 0, \#EXROM 1} \\
+        \midrule
+            & \multicolumn{2}{c|}{\#CHAREN x} & \\
+        Address         & CPU R & CPU W & VIC R \\
+        \midrule
+        \texttt{\$F000 - \$FFFF} & ROMH     & ROMH      & ROMH  \\
+        \texttt{\$E000 - \$EFFF} & ROMH     & ROMH      & ram   \\
+        \texttt{\$D000 - \$DFFF} & I/O\footnotemark[1] & I/O & ram   \\
+        \texttt{\$C000 - \$CFFF} & -        & -         & -     \\
+        \texttt{\$B000 - \$BFFF} & -        & -         & ROMH  \\
+        \texttt{\$A000 - \$AFFF} & -        & -         & -     \\
+        \texttt{\$9000 - \$9FFF} & ROML     & ROML      & ram   \\
+        \texttt{\$8000 - \$8FFF} & ROML     & ROML      & ram   \\
+        \texttt{\$7000 - \$7FFF} & -        & -         & ROMH  \\
+        \texttt{\$6000 - \$6FFF} & -        & -         & -     \\
+        \texttt{\$5000 - \$5FFF} & -        & -         & -     \\
+        \texttt{\$4000 - \$4FFF} & -        & -         & -     \\
+        \texttt{\$3000 - \$3FFF} & -        & -         & ROMH  \\
+        \texttt{\$2000 - \$2FFF} & -        & -         & -     \\
+        \texttt{\$1000 - \$1FFF} & -        & -         & -     \\
+        \texttt{\$0000 - \$0FFF} & ram      & ram       & ram   \\
+        \bottomrule
+    \end{tabularx}
+    \caption{C64 memory configurations with LHGX = xx01}
+    \label{tab:mem001x}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% http://tim.thorpeallen.net/Courses/Reference/Citations.html
+
+\begin{thebibliography}{999}
+
+\bibitem [PRG83]{PRG83} Commodore Computers, 1983, \textit{Commodore 64
+Programmer's Reference Guide}, Financial Times Prentice Hall.
+
+\bibitem [Lev86]{Lev86} William Levak and Ann Arbor, 1986, Commodore 64 Memory
+Configurations, \textit{The Transactor}, Volume 6, Issue 05, p. 51-55.
+
+\bibitem [PLA95]{PLA95}
+http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/c64/pla.txt
+
+\bibitem [Herd12]{Herd12} Mail by Bil Herd to cbm-hackers mailing list,
+http://www.softwolves.com/arkiv/cbm-hackers/17/17534.html
+
+\bibitem [AC12]{AC12} http://www.arcadecomponents.com/downloads.html
+
+\end{thebibliography}
+
+\end{document}
+

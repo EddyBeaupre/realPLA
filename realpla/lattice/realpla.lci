@@ -1,0 +1,160 @@
+
+[Device]
+Family = lc4k;
+PartNumber = LC4032V-10T48I;
+Package = 48TQFP;
+PartType = LC4032V;
+Speed = -10;
+Operating_condition = IND;
+Status = Production;
+EN_PinGLB = yes;
+EN_PinMacrocell = yes;
+Default_Device_IO_Types = LVCMOS33, -;
+
+[Revision]
+Parent = lc4k32v.lci;
+DATE = 09/21/2012;
+TIME = 00:14:53;
+Source_Format = Pure_VHDL;
+Synthesis = Synplify;
+
+[Ignore Assignments]
+
+[Clear Assignments]
+
+[Backannotate Assignments]
+
+[Global Constraints]
+Logic_reduction = Yes;
+Node_collapse = Yes;
+Svf_erase_program_verify = On;
+Max_pterm_collapse = 16;
+Nodes_collapsing_mode = Area;
+
+[Location Assignments]
+layer = OFF;
+i0 = Pin, 10, -, A, 11;
+i1 = Pin, 9, -, A, 10;
+i2 = Pin, 8, -, A, 9;
+i3 = Pin, 7, -, A, 8;
+i4 = Pin, 4, -, A, 7;
+i5 = Pin, 3, -, A, 6;
+i6 = Pin, 2, -, A, 5;
+i7 = Pin, 48, -, A, 4;
+i8 = Pin, 34, -, B, 11;
+i9 = Pin, 33, -, B, 10;
+i10 = Pin, 32, -, B, 9;
+i11 = Pin, 31, -, B, 8;
+i12 = Pin, 28, -, B, 7;
+i13 = Pin, 27, -, B, 6;
+i14 = Pin, 26, -, B, 5;
+i15 = Pin, 24, -, B, 4;
+f0 = Pin, 23, -, B, 3;
+f1 = Pin, 22, -, B, 2;
+f2 = Pin, 21, -, B, 1;
+f3 = Pin, 20, -, B, 0;
+f4 = Pin, 17, -, A, 15;
+f5 = Pin, 16, -, A, 14;
+f6 = Pin, 15, -, A, 13;
+f7 = Pin, 14, -, A, 12;
+
+[Group Assignments]
+layer = OFF;
+
+[Resource Reservations]
+layer = OFF;
+
+[Fitter Report Format]
+
+[Power]
+
+[Source Constraint Option]
+
+[Fast Bypass]
+
+[OSM Bypass]
+
+[Input Registers]
+
+[Netlist/Delay Format]
+NetList = VHDL;
+
+[IO Types]
+layer = OFF;
+
+[Pullup]
+
+[Slewrate]
+Default = Slow;
+
+[Region]
+
+[Timing Constraints]
+layer = OFF;
+
+[HSI Attributes]
+
+[Input Delay]
+
+[opt global constraints list]
+
+[Explorer User Settings]
+
+[Pin attributes list]
+
+[global constraints list]
+
+[Global Constraints Process Update]
+
+[pin lock limitation]
+
+[LOCATION ASSIGNMENTS LIST]
+
+[RESOURCE RESERVATIONS LIST]
+
+[individual constraints list]
+
+[Attributes list setting]
+
+[Timing Analyzer]
+
+[PLL Assignments]
+
+[Dual Function Macrocell]
+
+[Explorer Results]
+
+[VHDL synplify constraints]
+
+[VHDL spectrum constraints]
+
+[verilog synplify constraints]
+
+[verilog spectrum constraints]
+
+[VHDL synplify constraints list]
+
+[VHDL spectrum constraints list]
+
+[verilog synplify constraints list]
+
+[verilog spectrum constraints list]
+
+[ORP Bypass]
+
+[Register Powerup]
+
+[Constraint Version]
+version = 1.0;
+
+[ORP ASSIGNMENTS]
+layer = OFF;
+
+[Node attribute]
+layer = OFF;
+
+[SYMBOL/MODULE attribute]
+layer = OFF;
+
+[Nodal Constraints]
+layer = OFF;
