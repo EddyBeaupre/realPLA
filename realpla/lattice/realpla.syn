@@ -4,9 +4,9 @@ PROJECT realpla
 DESIGN realpla Normal
 DEVKIT LC4032V-10T48I
 ENTRY Pure VHDL
-MODULE ..\vhdl\c64pla.vhd
+MODULE ..\..\vhdl\c64pla.vhd
 MODSTYLE c64pla Normal
-MODULE ..\vhdl\c64pla_core.vhd
+MODULE ..\..\vhdl\c64pla_core.vhd
 MODSTYLE c64pla_core Normal
 SYNTHESIS_TOOL Synplify
 SIMULATOR_TOOL ActiveHDL
